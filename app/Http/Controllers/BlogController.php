@@ -14,7 +14,8 @@ class BlogController extends Controller
      */
     public function index()
     {
-        //
+       $DataBlogs = Blog::get();
+       return view('blog/list', compact('DataBlogs'));
     }
 
     /**
@@ -35,7 +36,24 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $name = '';
+      if($request->hasfile('filename')){
+        $file = $request->file('filename');
+        $name = time() . $file->getClientOriginalName();
+        $file->move(public_path() . '/images/', $name);
+      }
+
+      $blog = new Blog;
+      $blog->judul = 'Judul Pertamaku';
+      $blog->artikel = 'ini isi artikel pertamaku';
+      $blog->gambar = $name;
+      $blog->save();
+
+      return redirect('admin/blog')->with('success', 'Blog berhasil di simpan');
+
+
+
+
     }
 
     /**
